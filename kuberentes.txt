@@ -1,0 +1,78 @@
+1. kubectl create configmap fresco-config --from-literal SERVER_URL=https://www.fresco.me
+
+2.  Nginx Pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fresco-nginx-pod
+spec:
+  containers:
+    - name: fresco-nginx-container
+      image: nginx
+      env:
+        - name: SERVER_URL_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: fresco-config
+              key: SERVER_URL
+
+3. kubectl create secret generic fresco-secret \
+  --from-literal=user=admin \
+  --from-literal=password='pass'
+
+4. add secret to pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: fresco-nginx-pod
+spec:
+  containers:
+    - name: fresco-nginx-container
+      image: nginx
+      volumeMounts:
+        - name: fresco-secret
+          mountPath: "/etc/test"
+          readOnly: true
+      env:
+        - name: SERVER_URL_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: fresco-config
+              key: SERVER_URL
+  volumes: 
+     - name fresco-secret
+       secret: 
+          secretName: fresco-secret   
+
+5. Persistent Volume
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: fresco-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/tmp/fresco"  
+
+
+6. Persistent Volume claim
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fresco-pvc
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Mi    
+        
