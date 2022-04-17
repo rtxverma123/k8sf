@@ -40,7 +40,7 @@ spec:
               name: fresco-config
               key: SERVER_URL
   volumes: 
-     - name fresco-secret
+     - name: fresco-secret
        secret: 
           secretName: fresco-secret   
 
