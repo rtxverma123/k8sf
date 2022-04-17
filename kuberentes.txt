@@ -16,9 +16,7 @@ spec:
               name: fresco-config
               key: SERVER_URL
 
-3. kubectl create secret generic fresco-secret \
-  --from-literal=user=admin \
-  --from-literal=password='pass'
+3. kubectl create secret generic test --from-literal=admin=YWRtaW4K  --from-literal=pass=cGFzcwo= 
 
 4. add secret to pod
 apiVersion: v1
