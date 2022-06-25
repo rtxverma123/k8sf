@@ -1,0 +1,73 @@
+---
+ - name: Nginx
+   hosts: localhost
+   become: "yes"
+   tasks:
+    - name: install nginx
+      apt:
+       name: nginx
+       state: present
+    - name: service nginx
+      service:
+         name: nginx
+         state: started
+
+    - name: Copy nginx conf files
+      copy:
+        src: /root/files/nginx.conf.j2
+        dest: /etc/nginx/sites-available/default
+    - name: Link files
+      file:
+        src: /etc/nginx/sites-available/default
+        dest: /etc/nginx/sites-enabled/default
+        state: link
+      become: yes
+      notify: Restart Nginx
+
+    - name: Html Page change
+      copy:
+        src: /root/files/index.html
+        dest: /var/www/html/index.html
+   handlers:
+      - name: Restart Nginx
+        service:
+            name: nginx
+            state: restarted
+            
+            
+            
+ #Apache
+ - hosts: localhost
+  become: yes
+  tasks:
+    - name: Install apache2
+      apt:
+       name: apache2
+       state: present
+
+    - name: Copy conf files
+      copy:
+        src: /root/files/apache.conf.j2
+        dest: /etc/apache2/sites-enabled/000-default.conf
+
+    - name: Copy conf2 files
+      copy:
+        src: /root/files/apache.conf.j2
+        dest: /etc/apache2/sites-available/000-default.conf
+
+    - name: Copy ports
+      copy:
+        src: /root/files/ports.conf.j2
+        dest: /etc/apache2/ports.conf
+
+    - name: Html files
+      copy:
+        src: /root/files/index.html
+        dest: /var/www/index/index.html
+      notify: Restart Apache2
+  handlers:
+    - name: Restart Apache2
+      service:
+         name: apache2
+         state: restarted
+         enabled: true
