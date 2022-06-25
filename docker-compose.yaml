@@ -1,0 +1,47 @@
+version: "3"
+services:
+  main-war_app:
+      build: .
+      ports:
+        - 8888:8080
+      networks:
+        - my_newnts
+  web_server:
+      image: nginx
+      networks:
+        - my_newnts
+networks:
+   my_newnts:
+      driver: bridge
+      
+      
+      
+ #My-Sql
+version: "3"
+services: 
+    mysql-db: 
+       image: mysql
+       environment: 
+           MYSQL_DATABASE: "db"
+           MYSQL_ROOT_PASSWORD: "root"
+       ports: 
+          - "3306:3306"
+          
+          
+          
+# volumes
+version: '3'
+
+services:
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - prometheus-data:/prometheus
+
+volumes:
+  prometheus-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /disk1/prometheus-data
