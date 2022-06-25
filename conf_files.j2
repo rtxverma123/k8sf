@@ -1,0 +1,39 @@
+#Nginx
+server {
+       listen 8888 default_server;
+       listen [::]:8888 default_server;
+
+
+       server_name example.com;
+
+       root /var/www/html/;
+       index index.html;
+
+       location / {
+               try_files $uri $uri/ =404;
+       }
+}
+
+
+#Apache2
+<VirtualHost *:8081>
+ServerAdmin webmaster@localhost
+ServerName mydomain.com
+ServerAlias www.mydomain.com
+DocumentRoot /var/www/html
+ErrorLog ${APACHE_LOG_DIR}/error.log
+CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+
+#Ports
+Listen 80
+Listen 8081
+
+<IfModule ssl_module>
+        Listen 443
+</IfModule>
+
+<IfModule mod_gnutls.c>
+        Listen 443
+</IfModule>
