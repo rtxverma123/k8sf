@@ -1,0 +1,4 @@
+kubectl run hazelcast --image=hazelcast --port=5701
+kubectl expose deployment kubernetes-dashboard -n kube-system --type=NodePort
+kubectl expose pod myapp-pod --type=NodePort
+kubectl expose deployment mysqldeploy --type=NodePort --port=30188
