@@ -37,3 +37,18 @@ Listen 8081
 <IfModule mod_gnutls.c>
         Listen 443
 </IfModule>
+
+
+
+
+
+
+#Htttpd
+Listen 0.0.0.0:{{ port_number }}
+Listen [::0]:{{ port_number }}
+
+<virtualhost  *:{{ port_number }}>
+ServerName      private.localhost
+documentroot "{{ doc_root }}"
+
+</virtualhost>
