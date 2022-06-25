@@ -71,3 +71,39 @@
          name: apache2
          state: restarted
          enabled: true
+         
+         
+ # httpd
+- name: Setup httpd
+  hosts: localhost
+  vars:
+    doc_root: "/var/www/html"
+    port_number: 8080
+  tasks:
+    - name: Install httpd
+      yum:
+       name: httpd
+       state: present
+
+    - name: Service httpd
+      service:
+         name: httpd
+         state: started
+         enabled: yes
+
+    - name: conf_d file
+      copy:
+        src: /root/file/web.conf.j2
+        dest: /etc/httpd/conf/status.conf
+      notify: "Restart httpd"
+
+    - name: Copy Webpage
+      copy:
+        src: /root/file/index.html
+        dest: /var/www/html/
+  handlers:
+       - name: Restart httpd
+         service:
+             name: httpd
+             state: restarted
+
